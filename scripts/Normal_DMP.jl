@@ -1,27 +1,25 @@
+
 # Load
 
-cd("$(homedir())/Documents/Finite-Popúlations-")
+cd("$(homedir())\\Documents\\Finite-Populations-")
+include("$(homedir())\\Documents\\Finite-Populations-\\scripts\\helpers.jl")
 
-include("$(homedir())/Documents/Finite-Populations-/scripts/helpers.jl")
+outfile = open("$(homedir())\\Documents\\Finite-Populations-\\data\\muestra.txt","r")
+n = 1000
+mat1 = Matrix{Float64}(undef,n,1)
+mat1[:,1] = readdlm(outfile,dims=(n,1))
+close(outfile)
+trueN = 100000
+Data = mat1[:,1]
+ndat = size(mat1)[1]
+seed1 = 170081
+Random.seed!(seed1)
+
 
 ##### Main Program ######
 
 function main1()
 
-seed1 = 170081
-Random.seed!(seed1)
-
-## read data
-n = 1000
-outfile = open("muestra.txt","r")
-mat1 = Matrix{Float64}(undef,n,1)
-mat1[:,1] = readdlm(outfile,dims=(n,1))
-close(outfile)
-trueN = 100000
-
-Data = mat1[:,1]
-
-ndat = size(mat1)[1]
 # these are hyperparameters for Gamma prior
 # on PPr = total mass par.
 a = 2.0
