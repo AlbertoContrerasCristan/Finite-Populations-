@@ -2,7 +2,7 @@
 
 cd("$(homedir())/Documents/Finite-Popúlations-")
 
-include("($homedir())/Documents/Finite-Populations-/scripts/helpers.jl")
+include("$(homedir())/Documents/Finite-Populations-/scripts/helpers.jl")
 
 ##### Main Program ######
 
