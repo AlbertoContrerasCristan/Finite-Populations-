@@ -1,6 +1,8 @@
 # Load
 
-include("C:/Users/jgpen/Documents/Finite-Populations-/scripts/helpers.jl")
+cd("$(homedir())/Documents/Finite-Popúlations-")
+
+include("($homedir())/Documents/Finite-Populations-/scripts/helpers.jl")
 
 ##### Main Program ######
 
