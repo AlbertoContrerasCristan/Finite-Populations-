@@ -1,5 +1,3 @@
-using Statistics, Compat, Random, Distributions, DelimitedFiles
-
 ############################################# Generación Aleatoria de Datos
 
 function runif(n::Int64,aa::Float64,bb::Float64)

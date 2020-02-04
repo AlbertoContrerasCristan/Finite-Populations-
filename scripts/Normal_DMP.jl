@@ -1,58 +1,53 @@
+# Libraries
 
+using Statistics, Compat, Random, Distributions, DelimitedFiles, DataFrames
 # Load
 
 cd("$(homedir())\\Documents\\Finite-Populations-")
 include("$(homedir())\\Documents\\Finite-Populations-\\scripts\\helpers.jl")
+data = DataFrame(readdlm("$(homedir())\\Documents\\Finite-Populations-\\data\\muestra.txt"))
+data_mat = Matrix{Float64}(undef,n,1)
+data_mat[:,1] = data[1]
 
-outfile = open("$(homedir())\\Documents\\Finite-Populations-\\data\\muestra.txt","r")
-n = 1000
-mat1 = Matrix{Float64}(undef,n,1)
-mat1[:,1] = readdlm(outfile,dims=(n,1))
-close(outfile)
+# Sample and True Size
+
+ndat = nrow(data)
 trueN = 100000
-Data = mat1[:,1]
-ndat = size(mat1)[1]
+R = collect(ndat:500:trueN) # Grid de R < N
+
+# Replication
+
 seed1 = 170081
 Random.seed!(seed1)
 
+# Hyperparameters
+## Gamma prior
+### on PPr = total mass par.
 
-##### Main Program ######
+a, b, sdf, sS, stau = 2.0, 4.0, 4.0, 2.0, 15.0
+sm = mean(data[1])
 
-function main1()
-
-# these are hyperparameters for Gamma prior
-# on PPr = total mass par.
-a = 2.0
-b = 4.0
-
-sdf = 4.0
-sS = 2.0
-sm = mean(Data)
-stau = 15.0
-
-# number of posterior samples
-nS = 25000
-# number of initial samples to be burned
-burn = 30000
-#  How frequent to keep the sample,
-#   e.g. freqS <- 2 =>  every other sample
-freqS = 25
+# MCMC Parameters
+## number of posterior samples & number of burned
+## freqS is How frequent to keep the sample,
+### #   e.g. freqS <- 2 =>  every other sample
+nS, burn, freqS = 25000, 30000, 25
 
 # OBTAIN INITIAL VALUES FOR MCMC
-# initial value for total mass parameter
+## initial value for total mass parameter
 etta = rbeta(1000,1.0,Float64(ndat))
 eta0 = mean(etta)
-PPr = GaMix0(1000,Float64(ndat),eta0)
-#PPr = 11.87
+PPr = GaMix0(1000,Float64(ndat),eta0) #PPr = 11.87
+
 
 uvec = runif(ndat,0.0,0.5)
 Nvec = Nis(uvec,ndat)
 NN = maximum(Nvec)
 
-Theta0 = NIG00(Data,sm,stau,sS,sdf,NN)
+Theta0 = NIG00(data[1],sm,stau,sS,sdf,NN)
 
 weight = Weight0(NN,PPr)
-dvec = dsamplerC(weight,Theta0,Nvec,mat1)
+dvec = dsamplerC(weight,Theta0,Nvec,data_mat)
 
 #listDj = buildDj(dvec,ndat,1)
 #D = listDj[1]
@@ -95,7 +90,3 @@ writedlm(outfile1,qw)
 writedlm(outfile2,Totales)
 close(outfile1)
 close(outfile2)
-
-
-
-end
