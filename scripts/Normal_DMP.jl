@@ -1,17 +1,17 @@
 # Libraries
-
-using Statistics, Compat, Random, Distributions, DelimitedFiles, DataFrames
+using Statistics, Compat, Random, Distributions, DelimitedFiles, DataFrames, Dates
 # Load
 
 cd("$(homedir())\\Documents\\Finite-Populations-")
 include("$(homedir())\\Documents\\Finite-Populations-\\scripts\\helpers.jl")
 data = DataFrame(readdlm("$(homedir())\\Documents\\Finite-Populations-\\data\\muestra.txt"))
-data_mat = Matrix{Float64}(undef,n,1)
+ndat = nrow(data)
+data_mat = Matrix{Float64}(undef,ndat,1)
 data_mat[:,1] = data[1]
 
 # Sample and True Size
 
-ndat = nrow(data)
+
 trueN = 100000
 R = collect(ndat:500:trueN) # Grid de R < N
 
@@ -64,7 +64,20 @@ dvec = dsamplerC(weight,Theta0,Nvec,data_mat)
 #println(Nold)
 #return ThetaWeight(dvec,mat1,ndat,sm,stau,sm,sS,3,Thetta,Nold,PPr)
 
-STotales = NormMixMCMC(a,b,sdf,sS,sm,stau,nS,burn,freqS,PPr,dvec,Theta0,mat1,trueN)
+STotales = NormMixMCMC(a,
+                       b,
+                       sdf,
+                       sS,
+                       sm,
+                       stau,
+                       nS,
+                       burn,
+                       freqS,
+                       PPr,
+                       dvec,
+                       Theta0,
+                       mat1,
+                       trueN)
 
 ###### then analize totales #
 T1 = trueN-ndat

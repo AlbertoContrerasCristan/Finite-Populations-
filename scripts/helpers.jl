@@ -348,9 +348,23 @@ function CircMixMCMC(aa::Float64,bb::Float64,sdf::Float64,sS::Float64,mm::Float6
     return Ytotal
 end
 
-function NormMixMCMC(aa::Float64,bb::Float64,sdf::Float64,sS::Float64,mm::Float64,tauu::Float64,nMCMC::Int64,nBurn::Int64,nfreq::Int64,PP::Float64,dd::Array{Int64,1},Theta::Array{Float64,2},data::Array{Float64,2},tN::Int64)
+function NormMixMCMC(aa::Float64,
+                    bb::Float64,
+                    sdf::Float64,
+                    sS::Float64,
+                    mm::Float64,
+                    tauu::Float64,
+                    nMCMC::Int64,
+                    nBurn::Int64,
+                    nfreq::Int64,
+                    PP::Float64,
+                    dd::Array{Int64,1},
+                    Theta::Array{Float64,2},
+                    data::Array{Float64,2},
+                    tN::Int64)
     # Given initial value Theta'(Theta_1,...Theta_Nlast) = ((mu1,Ka1) ... (mu_Nlast,Ka_Nlast))
     # and selectors  d1,...,dn, performs MCMC.
+    init = Dates.format(now(), "HH:MM")
     sizeMCMC = Int64(nMCMC/nfreq)
     print("mcmc running and to store")
     print(" ",sizeMCMC," posterior samples...","\n")
