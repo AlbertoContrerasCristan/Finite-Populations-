@@ -64,20 +64,7 @@ dvec = dsamplerC(weight,Theta0,Nvec,data_mat)
 #println(Nold)
 #return ThetaWeight(dvec,mat1,ndat,sm,stau,sm,sS,3,Thetta,Nold,PPr)
 
-STotales = NormMixMCMC(a,
-                       b,
-                       sdf,
-                       sS,
-                       sm,
-                       stau,
-                       nS,
-                       burn,
-                       freqS,
-                       PPr,
-                       dvec,
-                       Theta0,
-                       mat1,
-                       trueN)
+STotales = NormMixMCMC(a,b,sdf,sS,sm,stau,nS,burn,freqS,PPr,dvec,Theta0,data_mat,trueN)
 
 ###### then analize totales #
 T1 = trueN-ndat

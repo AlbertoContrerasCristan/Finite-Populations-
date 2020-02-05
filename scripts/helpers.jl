@@ -436,15 +436,15 @@ function NormMixMCMC(aa::Float64,
     KKout = Nclust[2:len]
     Nout = Nt[2:len]
     #  output results for assessing convergence of MCMC
-    outfilealfa = open("alfa.txt","w")
-    outfileNclus = open("Nclus.txt","w")
-    outfileNj = open("Nj.txt","w")
-    writedlm(outfilealfa,alphout)
-    writedlm(outfileNclus,KKout)
-    writedlm(outfileNj,Nout)
-    close(outfilealfa)
-    close(outfileNclus)
-    close(outfileNj)
+    # outfilealfa = open("alfa.txt","w")
+    # outfileNclus = open("Nclus.txt","w")
+    # outfileNj = open("Nj.txt","w")
+    # writedlm(outfilealfa,alphout)
+    # writedlm(outfileNclus,KKout)
+    # writedlm(outfileNj,Nout)
+    # close(outfilealfa)
+    # close(outfileNclus)
+    # close(outfileNj)
     ##return Ytotal
     ### CORRECT  Ytotal here #############
     #return(Ytotal)
