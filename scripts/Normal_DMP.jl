@@ -7,14 +7,13 @@ include("$(homedir())\\Documents\\Finite-Populations-\\scripts\\helpers.jl")
 data = DataFrame(readdlm("$(homedir())\\Documents\\Finite-Populations-\\data\\muestra.txt"))
 ndat = nrow(data)
 data_mat = Matrix{Float64}(undef,ndat,1)
+
 data_mat[:,1] = data[1]
 
 # Sample and True Size
 
 
 trueN = 100000
-R = collect(ndat:500:trueN) # Grid de R < N
-
 # Replication
 
 seed1 = 170081
@@ -84,9 +83,82 @@ print("seed =");print(" ",seed1,"\n")
 
 qw = quantile(Totales,[0.025 0.05 0.25 0.5 0.75 0.95 0.975])
 print(qw)
-outfile1 = open("cuantiles-muestra.txt","w")
-outfile2 = open("Totales-muestra.txt","w")
-writedlm(outfile1,qw)
-writedlm(outfile2,Totales)
-close(outfile1)
-close(outfile2)
+
+#outfile2 = open("Totales-muestra.txt","w")
+#writedlm(outfile2,Totales)
+
+#close(outfile2)
+
+R_n1 = collect(50:50:5000) # Grid de R < N
+R_n2 = collect(5000:100:10000)
+R_n2 = collect(10000:250:30000)
+R_n2 = collect(30000:500:60000)
+R_n4 = collect(60000:1000:90000)
+
+means_short = Array{Any}(undef,length(R_n1))
+runtimes_short = Array{Any}(undef,length(R_n1))
+
+for j in 1:length(R_n1)
+
+    out = NormMixMCMC_plot(a,b,sdf,sS,sm,stau,nS,burn,freqS,PPr,dvec,Theta0,data_mat,trueN, R_n1[j])
+    means_short[j] = mean(out[1])
+    runtimes_short[j] = out[5]
+
+end
+
+graph_out1 = Matrix{Float64}(R_n1, means_short,runtimes_short)
+
+graph1 = open("graph1.csv","w")
+writedlm(graph1,graph_out1)
+close(graph1)
+
+means_short2 = Array{Any}(undef,length(R_n2))
+runtimes_short2 = Array{Any}(undef,length(R_n2))
+
+for j in 1:length(R_n2)
+
+    out = NormMixMCMC_plot(a,b,sdf,sS,sm,stau,nS,burn,freqS,PPr,dvec,Theta0,data_mat,trueN, R_n2[j])
+    means_short2[j] = mean(out[1])
+    runtimes_short2[j] = out[5]
+
+end
+
+graph_out2 = Matrix{Float64}(R_n2, means_short2,runtimes_short2)
+
+graph2 = open("graph2.csv","w")
+writedlm(graph2,graph_out2)
+close(graph2)
+
+means_short3 = Array{Any}(undef,length(R_n3))
+runtimes_short = Array{Any}(undef,length(R_n3))
+
+for j in 1:length(R_n3)
+
+    out = NormMixMCMC_plot(a,b,sdf,sS,sm,stau,nS,burn,freqS,PPr,dvec,Theta0,data_mat,trueN, R_n3[j])
+    means_short3[j] = mean(out[1])
+    runtimes_short3[j] = out[5]
+
+end
+
+graph_out3 = Matrix{Float64}(R_n3, means_short3,runtimes_short3)
+
+graph3 = open("graph3.csv","w")
+writedlm(graph3,graph_out3)
+close(graph3)
+
+means_short4 = Array{Any}(undef,length(R_n4))
+runtimes_short4 = Array{Any}(undef,length(R_n4))
+
+for j in 1:length(R_n4)
+
+    out = NormMixMCMC_plot(a,b,sdf,sS,sm,stau,nS,burn,freqS,PPr,dvec,Theta0,data_mat,trueN, R_n4[j])
+    means_short4[j] = mean(out[1])
+    runtimes_short4[j] = out[5]
+
+end
+
+graph_out4 = Matrix{Float64}(R_n4, means_short4,runtimes_short4)
+
+graph4 = open("graph4.csv","w")
+writedlm(graph4,graph_out4)
+close(graph4)

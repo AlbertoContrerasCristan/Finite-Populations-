@@ -364,7 +364,7 @@ function NormMixMCMC(aa::Float64,
                     tN::Int64)
     # Given initial value Theta'(Theta_1,...Theta_Nlast) = ((mu1,Ka1) ... (mu_Nlast,Ka_Nlast))
     # and selectors  d1,...,dn, performs MCMC.
-    init = Dates.format(now(), "HH:MM")
+    init = now()
     sizeMCMC = Int64(nMCMC/nfreq)
     print("mcmc running and to store")
     print(" ",sizeMCMC," posterior samples...","\n")
@@ -435,6 +435,7 @@ function NormMixMCMC(aa::Float64,
     alphout = alphk[2:len]
     KKout = Nclust[2:len]
     Nout = Nt[2:len]
+    finish = now()
     #  output results for assessing convergence of MCMC
     # outfilealfa = open("alfa.txt","w")
     # outfileNclus = open("Nclus.txt","w")
@@ -448,5 +449,126 @@ function NormMixMCMC(aa::Float64,
     ##return Ytotal
     ### CORRECT  Ytotal here #############
     #return(Ytotal)
-    return (float(Nsim)/float(Rsim))*Ytotal
+
+    runtime = init - finish
+    model = Array{Any}(undef,5)
+    model[2] = alphout
+    model[3] = KKout
+    model[4] = Nout
+    model[5] = runtime, "HH:MM"
+    model[1] = (float(Nsim)/float(Rsim))*Ytotal
+    return (model)
+end
+
+function NormMixMCMC_plot(aa::Float64,
+                    bb::Float64,
+                    sdf::Float64,
+                    sS::Float64,
+                    mm::Float64,
+                    tauu::Float64,
+                    nMCMC::Int64,
+                    nBurn::Int64,
+                    nfreq::Int64,
+                    PP::Float64,
+                    dd::Array{Int64,1},
+                    Theta::Array{Float64,2},
+                    data::Array{Float64,2},
+                    tN::Int64,
+                    R_n::Int64)
+    # Given initial value Theta'(Theta_1,...Theta_Nlast) = ((mu1,Ka1) ... (mu_Nlast,Ka_Nlast))
+    # and selectors  d1,...,dn, performs MCMC.
+    init = now()
+    sizeMCMC = Int64(nMCMC/nfreq)
+    print("mcmc running and to store")
+    print(" ",sizeMCMC," posterior samples...","\n")
+    n = size(data)[1]
+    Nsim = tN-n
+    Rsim = R_n
+    print("value of R-n is")
+    print(" ",Rsim,"\n")
+    Ytotal = zeros(sizeMCMC)
+    Nlast = size(Theta)[1]
+    Xivec = 1.0./InvXi(Nlast)
+    nc1 = 0
+    alphk = 0.0
+    Nclust = 0
+    Nt  = 0
+    for j = 1:(nMCMC+nBurn) # start MCMC
+        if j%10000 == 0
+            println("Numb. Iter.="," ",j,"\n")
+        end
+        uvecj = unifvec(dd,Xivec,n) # update u1, ... , un
+        Nvecj = Nis(uvecj,n) # update N_1, ... , N_n and N
+        nuevaN = maximum(Nvecj)
+        # update Theta_1, ... , Theta_nuevaN
+        # and w_1, ... , w_nuevaN and number of clusters KK
+        ParsPesos = ThetaWeight(dd,data,n,mm,tauu,sdf,sS,nuevaN,Theta,Nlast,PP)
+        Theta = ParsPesos[1]
+        ww = ParsPesos[2]
+        Kj = ParsPesos[3]
+        # sample total mass parameter
+        etta = Betta(PP,Float64(n))
+        ##      println(etta)
+        PP =  GaMix(aa,bb,Float64(Kj),Float64(n),etta)
+        # update vector of selectors
+        dd = dsamplerC(ww,Theta,Nvecj,data)
+        # update new number   of components
+        Nlast = nuevaN
+        Xivec = 1.0./InvXi(Nlast)
+        ## collect samples if condition applies
+        if  j>nBurn && j%nfreq==0
+            nc1 += 1
+            alphk = hcat(alphk,PP)
+            Nclust = hcat(Nclust,Kj)
+            Nt = hcat(Nt,Nlast)
+            # renormalizing weights so to ensure propriety of mixture
+            ww /= sum(ww)
+            ww1 = cumsum(ww)
+            # this aux var  will store sum of simulated Y_i values
+            Ysum  = 0
+            # proceed to simulate and ADD y1,...,yNsim for  j-th  mixture
+            #  CORRECT proceed to simulate and  ADD y1,...,yRsim for  j-th  mixture
+            for nY = 1:Rsim
+                u = runif(1,0.0,1.0)[1]
+                c2 = 1
+                while u>ww1[c2]
+   	                c2 += 1
+                end
+                Ysum = Ysum +  rnorm(1,Theta[c2,1],sqrt(Theta[c2,2]))[1]
+            end #end nY
+            Ytotal[nc1] = Ysum
+        end # end if j>nBurn && j%nfreq==0
+    end # end for j
+    #####     MCMC  ENDS HERE  #####
+    println("End of MCMC---> now storing output")
+    print("nc1 is: ")
+    println(nc1)
+    # ouput results here
+    len = length(alphk)
+    alphout = alphk[2:len]
+    KKout = Nclust[2:len]
+    Nout = Nt[2:len]
+    finish = now()
+    #  output results for assessing convergence of MCMC
+    # outfilealfa = open("alfa.txt","w")
+    # outfileNclus = open("Nclus.txt","w")
+    # outfileNj = open("Nj.txt","w")
+    # writedlm(outfilealfa,alphout)
+    # writedlm(outfileNclus,KKout)
+    # writedlm(outfileNj,Nout)
+    # close(outfilealfa)
+    # close(outfileNclus)
+    # close(outfileNj)
+    ##return Ytotal
+    ### CORRECT  Ytotal here #############
+    #return(Ytotal)
+
+    runtime = init - finish
+    model = Array{Any}(undef,5)
+    model[2] = alphout
+    model[3] = KKout
+    model[4] = Nout
+    model[5] = runtime
+    model[1] = (float(Nsim)/float(Rsim))*Ytotal
+    return (model)
 end
