@@ -1,0 +1,166 @@
+# Libraries ---------------------------------------------------------------
+
+library(Sim.DiffProc)
+library(tidyverse)
+library(tidyquant)
+library(dplyr)
+library(lubridate)
+library(scales)
+
+
+# Tema --------------------------------------------------------------------
+
+theme_pro <- function(){
+  theme_minimal() +
+    theme(
+      text = element_text(family = "Bookman", color = "gray25"),
+      plot.title = element_text(color = "#2C3744", 
+                                size = 18, 
+                                face = "bold"),
+      plot.subtitle = element_text(color = "#A6A6A7",
+                                   size = 16,
+                                   face = "bold"),
+      plot.caption = element_text(color = "#A6A6A7",
+                                  size = 12,
+                                  face = "bold"),
+      plot.background = element_rect(fill = "white"),
+      plot.margin = unit(c(5, 10, 5, 10), units = "mm"),
+      axis.title.x = element_text(color = "#FF7B05",
+                                  size = 12,
+                                  face = "bold"),
+      axis.title.y = element_text(color = "#FF7B05",
+                                  size = 12,
+                                  face = "bold"),
+      axis.text.x = element_text(color = "#531F7E",
+                                 face = "bold"),
+      axis.text.y = element_text(color = "#531F7E",
+                                 face = "bold"),
+      axis.line = element_line(color="#A6A6A7"),
+      strip.text = element_text(color = "#2C3744",
+                                face = "bold"),
+      legend.title = element_text(color ="#A6A6A7",
+                                  face = "bold"),
+      legend.text = element_text(color = "#2C3744",
+                                 face = "bold")
+    )
+} 
+
+# Import ------------------------------------------------------------------
+
+netflix <- "NFLX" %>%
+  tq_get(get  = "stock.prices",
+         from = "2018-02-05",
+         to   = "2019-02-05") %>% 
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = "daily", 
+               col_rename = "returns")
+
+# mu & sigma --------------------------------------------------------------
+
+
+mu_sigma <- netflix %>%   
+      select(returns) %>% 
+      summarise( mu = mean(returns),
+                 sigma = sd(returns))
+
+s0 <- "NFLX" %>%
+  tq_get(get  = "stock.prices",
+         from = "2019-02-04",
+         to   = "2019-02-05") %>% 
+         select(adjusted) %>% 
+         pull(adjusted)
+
+
+# Simulate ----------------------------------------------------------------
+
+set.seed(1997)
+sim <-GBM(N = nrow(netflix),
+                      M = 1000,
+                      x0=s0,
+                      theta = mu_sigma$mu,
+                      sigma = mu_sigma$sigma)
+
+
+# Visualize Paths---------------------------------------------------------------
+
+
+sim <- as_data_frame(sim) %>%
+       mutate(id = 1:nrow(sim)) 
+
+paths <- sim %>% 
+         dplyr::select(id,X1:X1000) %>% 
+         gather(Sim, Price, -id) 
+
+paths %>% ggplot( aes( x = id, y = Price, col = Sim)) +
+  geom_line() +
+  theme_pro() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank())+
+  labs(title = "Monte Carlo Stock Price Simulation",
+       subtitle = "Geometric Brownian Motion",
+       caption = "1000 Trayectories - 252 Day Horizon",
+       x = "",
+       y = "") +
+  scale_y_continuous(position = "left",
+                     breaks = seq(from = 140,
+                                  to = 500,
+                                  by = 20),
+                     labels=dollar_format(prefix="$")) 
+  
+sim <- sim %>% 
+  filter(id == 252) %>% 
+  dplyr::select(-id)%>% 
+  gather("Sim", "Price") 
+
+
+r <- range(sim$Price)
+bw <- (r[2]-r[1])/sqrt(nrow(sim))
+
+confidence_interval <- quantile( x = sim$Price, 
+                                 probs = c(.025, 0.975))
+upside_prob <- sum(sim$Price>=s0)/nrow(sim)
+q5 <- mean(sim$Price)
+
+
+# Histogram ---------------------------------------------------------------
+
+sim %>% 
+  ggplot(aes(x = Price)) +
+  geom_histogram( aes(y = ..density..),binwidth = bw, size = 1,
+                  fill = "#79BC42", col = "#531F7E", alpha=0.8) +
+  geom_vline(xintercept = q5, size = 1) +
+  scale_x_continuous( breaks = seq(from=340, to =480, by=20 ))+
+  geom_text(aes(x=375,
+                y=0.05),
+            label=paste("Median", signif(q5,5)), 
+            size =5,
+            col = "#531F7E")+
+  theme_pro() +
+  labs( title = "Netflix",
+        subtitle = "Monte Carlo Price Simulation",
+        caption = paste("90% Confidence interval ", 
+                        "[$",
+                        signif(confidence_interval[1],5),
+                        ", $", 
+                        signif(confidence_interval[2],5),
+                        "]"),
+        x = paste(signif(100*upside_prob,4), "%",
+                  " 1Y Upside Probability at current price of $",signif(s0,5)),
+        y = "") +
+  theme(
+    plot.title = element_text(color = "#531F7E", 
+                              size = 18, 
+                              face = "bold"),
+    plot.subtitle = element_text(color = "#79BC42",
+                                 size = 16,
+                                 face = "bold"),
+    plot.caption = element_text(color = "#531F7E",
+                                size = 12,
+                                face = "bold"),
+    axis.title.x = element_text(color = "#79BC42",
+                                size = 12,
+                                face = "bold"),
+    axis.text.y = element_blank()) +
+  scale_x_continuous(labels=dollar_format(prefix="$"))
+

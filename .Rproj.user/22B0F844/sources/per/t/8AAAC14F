@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1581997011939.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "790750715",
+    "id" : "8AAAC14F",
+    "lastKnownWriteTime" : 1581997884,
+    "last_content_update" : 1581997884439,
+    "path" : "~/Finite-Populations-/scripts/graph.R",
+    "project_path" : "scripts/graph.R",
+    "properties" : {
+        "cursorPosition" : "51,0",
+        "scrollLine" : "37"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

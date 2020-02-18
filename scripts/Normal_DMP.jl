@@ -16,7 +16,7 @@ data_mat[:,1] = data[1]
 trueN = 100000
 # Replication
 
-seed1 = 170081
+seed1 = 1234
 Random.seed!(seed1)
 
 # Hyperparameters
@@ -90,10 +90,10 @@ print(qw)
 #close(outfile2)
 
 R_n1 = collect(50:50:5000) # Grid de R < N
-R_n2 = collect(5000:100:10000)
-R_n2 = collect(10000:250:30000)
-R_n2 = collect(30000:500:60000)
-R_n4 = collect(60000:1000:90000)
+R_n2 = collect(5100:100:10000)
+R_n3 = collect(10250:250:30000)
+R_n4 = collect(30500:500:60000)
+R_n5 = collect(61000:1000:90000)
 
 means_short = Array{Any}(undef,length(R_n1))
 runtimes_short = Array{Any}(undef,length(R_n1))
@@ -106,11 +106,17 @@ for j in 1:length(R_n1)
 
 end
 
-graph_out1 = Matrix{Float64}(R_n1, means_short,runtimes_short)
+r_n1 = open("r_n1.csv","w")
+writedlm(r_n1,R_n1)
+close(r_n1)
 
-graph1 = open("graph1.csv","w")
-writedlm(graph1,graph_out1)
-close(graph1)
+mean1 = open("mean1.csv","w")
+writedlm(mean1,means_short/1000000)
+close(mean1)
+
+runtime1 = open("runtime1.csv","w")
+writedlm(runtime1,Dates.value.(runtimes_short)/-60000)
+close(runtime1)
 
 means_short2 = Array{Any}(undef,length(R_n2))
 runtimes_short2 = Array{Any}(undef,length(R_n2))
@@ -123,14 +129,21 @@ for j in 1:length(R_n2)
 
 end
 
-graph_out2 = Matrix{Float64}(R_n2, means_short2,runtimes_short2)
+r_n2 = open("r_n2.csv","w")
+writedlm(r_n2,R_n2)
+close(r_n2)
 
-graph2 = open("graph2.csv","w")
-writedlm(graph2,graph_out2)
-close(graph2)
+mean2 = open("mean2.csv","w")
+writedlm(mean2,means_short2/1000000)
+close(mean2)
+
+runtime2 = open("runtime2.csv","w")
+writedlm(runtime2,Dates.value.(runtimes_short2)/-60000)
+close(runtime2)
+
 
 means_short3 = Array{Any}(undef,length(R_n3))
-runtimes_short = Array{Any}(undef,length(R_n3))
+runtimes_short3 = Array{Any}(undef,length(R_n3))
 
 for j in 1:length(R_n3)
 
@@ -140,11 +153,17 @@ for j in 1:length(R_n3)
 
 end
 
-graph_out3 = Matrix{Float64}(R_n3, means_short3,runtimes_short3)
+r_n3 = open("r_n3.csv","w")
+writedlm(r_n3,R_n3)
+close(r_n3)
 
-graph3 = open("graph3.csv","w")
-writedlm(graph3,graph_out3)
-close(graph3)
+mean3 = open("mean3.csv","w")
+writedlm(mean3,means_short3/1000000)
+close(mean3)
+
+runtime3 = open("runtime3.csv","w")
+writedlm(runtime3,Dates.value.(runtimes_short3)/-60000)
+close(runtime3)
 
 means_short4 = Array{Any}(undef,length(R_n4))
 runtimes_short4 = Array{Any}(undef,length(R_n4))
