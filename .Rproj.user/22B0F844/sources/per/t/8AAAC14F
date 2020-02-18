@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "790750715",
+    "hash" : "1822595201",
     "id" : "8AAAC14F",
-    "lastKnownWriteTime" : 1581997884,
-    "last_content_update" : 1581997884439,
+    "lastKnownWriteTime" : 1582049095,
+    "last_content_update" : 1582049095945,
     "path" : "~/Finite-Populations-/scripts/graph.R",
     "project_path" : "scripts/graph.R",
     "properties" : {
-        "cursorPosition" : "51,0",
-        "scrollLine" : "37"
+        "cursorPosition" : "100,0",
+        "scrollLine" : "81"
     },
     "read_only" : false,
     "read_only_alternatives" : [
