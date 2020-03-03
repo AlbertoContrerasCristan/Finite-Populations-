@@ -70,7 +70,7 @@ for j in 1:length(R_n)
     end
 end
 
-
+print("Iterando el elemento ", 1, " , ",1)
 
 
 
