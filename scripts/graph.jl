@@ -52,10 +52,34 @@ R_n2 = collect(5100:100:10000)
 R_n3 = collect(10250:250:30000)
 R_n4 = collect(30500:500:60000)
 R_n5 = collect(61000:1000:90000)
+R_n = collect(50:50:10000)
+##### Gráfica ECM
+
+ecm1= Array{Any}(undef,10,length(R_n1))
+
+for j in 1:length(R_n)
+    for i in 1:10
+        seed = seed1 + i
+        Random.seed!(seed)
+        print("Iterando el elemento ", i, " , ",j)
+        STotales = NormMixMCMC_plot(a,b,sdf,sS,sm,stau,nS,burn,freqS,PPr,dvec,Theta0,data_mat,trueN, R_n[j])
+        tt = sum(data_mat)
+        Totales = mean(STotales.+tt)
+        Totales = Totales-trueN
+        ecm1[i,j] = Totales
+    end
+end
+
+
+
+
+
+
 
 means_short = Array{Any}(undef,length(R_n1))
 runtimes_short = Array{Any}(undef,length(R_n1))
 
+#### Otra gráfica
 for j in 1:length(R_n1)
 
     out = NormMixMCMC_plot(a,b,sdf,sS,sm,stau,nS,burn,freqS,PPr,dvec,Theta0,data_mat,trueN, R_n1[j])
