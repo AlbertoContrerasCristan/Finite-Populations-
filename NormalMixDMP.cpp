@@ -1,0 +1,19 @@
+#include<RcppArmadillo.h>
+#include<gsl/gsl_rng.h>
+#include<gsl/gsl_randist.h>
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(RcppGSL)]
+
+// computes de sequence 1/xi_k = 2^{k}
+// which  is used to reduce correlation between u_i's and w_k's
+
+
+// [[Rcpp::export]]
+NumericVector InvXi(int m){ 
+  
+  for(int i = 0, i<m,i++){
+    kappa[i] = k^i
+  }
+
+  return kappa
+}

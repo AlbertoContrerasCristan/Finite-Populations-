@@ -450,14 +450,14 @@ function NormMixMCMC(aa::Float64,
     ### CORRECT  Ytotal here #############
     #return(Ytotal)
 
-    runtime = init - finish
-    model = Array{Any}(undef,5)
-    model[2] = alphout
-    model[3] = KKout
-    model[4] = Nout
-    model[5] = runtime, "HH:MM"
-    model[1] = (float(Nsim)/float(Rsim))*Ytotal
-    return (model)
+    #runtime = init - finish
+    #model = Array{Any}(undef,5)
+    #model[2] = alphout
+    #model[3] = KKout
+    #model[4] = Nout
+    #model[5] = runtime, "HH:MM"
+    #model[1] = (float(Nsim)/float(Rsim))*Ytotal
+    return (float(Nsim)/float(Rsim))*Ytotal
 end
 
 function NormMixMCMC_plot(aa::Float64,
@@ -544,11 +544,11 @@ function NormMixMCMC_plot(aa::Float64,
     print("nc1 is: ")
     println(nc1)
     # ouput results here
-    len = length(alphk)
-    alphout = alphk[2:len]
-    KKout = Nclust[2:len]
-    Nout = Nt[2:len]
-    finish = now()
+    #len = length(alphk)
+    #alphout = alphk[2:len]
+    #KKout = Nclust[2:len]
+    #Nout = Nt[2:len]
+    #finish = now()
     #  output results for assessing convergence of MCMC
     # outfilealfa = open("alfa.txt","w")
     # outfileNclus = open("Nclus.txt","w")
@@ -563,12 +563,12 @@ function NormMixMCMC_plot(aa::Float64,
     ### CORRECT  Ytotal here #############
     #return(Ytotal)
 
-    runtime = init - finish
-    model = Array{Any}(undef,5)
-    model[2] = alphout
-    model[3] = KKout
-    model[4] = Nout
-    model[5] = runtime
-    model[1] = (float(Nsim)/float(Rsim))*Ytotal
-    return (model)
+    #runtime = init - finish
+    #model = Array{Any}(undef,5)
+    #model[2] = alphout
+    #model[3] = KKout
+    #model[4] = Nout
+    #model[5] = runtime
+    #model[1] = (float(Nsim)/float(Rsim))*Ytotal
+    return (float(Nsim)/float(Rsim))*Ytotal
 end

@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1582925641338.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2963480387",
+    "id" : "31BF9241",
+    "lastKnownWriteTime" : 1582925648,
+    "last_content_update" : 1582925648327,
+    "path" : "~/Finite-Populations-/scripts/try.cpp",
+    "project_path" : "scripts/try.cpp",
+    "properties" : {
+        "tempName" : "Untitled6"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "cpp"
+}

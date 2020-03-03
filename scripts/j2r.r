@@ -1,6 +1,7 @@
 library(JuliaCall)
 setwd("C:/Users/jgpen/Documents/Finite-Populations-/Julia-1.2.0/bin")
-julia <- julia_setup(JULIA_HOME = "C:/Users/jgpen/Documents/Finite-Populations-/Julia-1.2.0/bin")
+julia <- julia_setup(JULIA_HOME = "C:/Users/jgpen/Documents/Finite-Populations-/Julia-1.2.0/bin",
+                     rebuild = TRUE)
 
 
 julia_install_package_if_needed("Compat")

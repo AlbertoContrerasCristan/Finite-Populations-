@@ -1,0 +1,7 @@
+library(Rcpp)
+library(RcppArmadillo)
+library(RcppGSL)
+library(here)
+
+Rcpp::sourceCpp(here("scripts","NormalMixDMP.cpp"))
+
