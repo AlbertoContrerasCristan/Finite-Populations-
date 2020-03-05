@@ -1,16 +1,16 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+
 //computes de sequence 1/xi_k = 2^{k}
 //which  is used to reduce correlation between u_i's and w_k's
 
 NumericVector InvXi(int m){ 
   NumericVector kappa(m); 
-  for(int i = 0; i<m;i++ ){
-    kapp[j] = 2^(i+1);
+  for(int j=0; j<m; j++){
+    kappa[j] = 2^(j+1);
   }
   return kappa;
-  
 }
 
 //N_i SLICE SAMPLER
@@ -32,7 +32,7 @@ NumericVector Nis(NumericVector uv , int nu){
   }//End for
     return Ni;
 
-//GSL random Beta size n
+//random Beta size n
 NumericVector rbeta(int n, double a, double b){
   gsl_rng *s = gsl_rng_alloc(gsl_rng_mt19937);// Create RNG seed
   NumericVector beta(n);
