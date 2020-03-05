@@ -1,4 +1,5 @@
 library(tidyverse)
+library(dplyr)
 
 grid1 <- read_csv("~/Finite-Populations-/graph/r_n1.csv")
 grid2 <- read_csv("~/Finite-Populations-/graph/r_n2.csv")
@@ -98,3 +99,19 @@ modelo1 %>% ggplot(aes(x = r_n, y = value, group = variable)) +
                  caption = "Units in Thousands",
                  x = "R - n",
                  y = "Total Population Mean")
+
+ecm <- read_csv('graph/ecm.csv', col_names = FALSE)
+
+ecm <- ecm^2
+
+graph <- data_frame(r_n = seq(from = 50, to = 2500, by = 50),
+                    ecm = sqrt(colMeans(ecm)))
+
+source('scripts/helpers.R')
+graph %>% ggplot(aes(x = r_n, y = ecm)) + 
+          geom_line( size = 0.65, col = '#79BC42') +
+          labs(title = 'Error Cuadrático Medio',
+               x = 'R - n',
+               y = 'ECM')+
+          scale_x_continuous(breaks = seq(from = 50, to = 2600, by = 250)) +
+          theme_pro()
